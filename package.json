@@ -1,0 +1,15 @@
+{
+  "name": "dice",
+  "version": "0.3.0",
+  "description": "Dice Simulator and Countdown Timer",
+  "main": "roll-dice.js",
+  "author": "Wesley L. Handy <wesleylhandy@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^3.0.0"
+  },
+  "scripts": {
+    "roll": "node roll-dice",
+    "timer": "node countdown"
+  }
+}
