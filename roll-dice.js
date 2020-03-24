@@ -43,29 +43,32 @@ program.on("--help", () => {
 
 program.parse(process.argv);
 
+global.DICE_DISPLAY_ROW_HEIGHT = 7;
+global.DICE_ROW_HEIGHT = 5;
+
+const rollDice = async (dice) => {
+  try {
+    const done = await dice.rollDice();
+    try {
+      const answers = await inquirer.prompt([{
+        type: "confirm",
+        name: "again",
+        message: "Roll again?",
+        default: true
+      }]);
+      if (answers.again === true) {
+        rollDice(dice);
+      }
+    } catch(err) { }
+  } catch(err) { }
+}
+
 const __MAIN__ = () => {
   console.clear();
   const { numDice, sides, varyingSides } = program;
   const dice = new Dice(numDice, sides, varyingSides);
 
-  const rollDice = async () => {
-    try {
-      const done = await dice.rollDice();
-      try {
-        const answers = await inquirer.prompt([{
-          type: "confirm",
-          name: "again",
-          message: "Roll again?",
-          default: true
-        }]);
-        if (answers.again === true) {
-          rollDice();
-        }
-      } catch(err) { }
-    } catch(err) { }
-  }
-
-  rollDice();
+  rollDice(dice);
   
 };
 

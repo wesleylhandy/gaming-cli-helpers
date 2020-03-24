@@ -8,7 +8,8 @@ class Die {
     this.sides = sides;
     this.weight = 4.1;
     this.initCounter();
-    this.initInterval()
+    this.initInterval();
+    this.dot = '\u2022';
   }
 
   initCounter = () => {
@@ -19,19 +20,39 @@ class Die {
     this.interval = this.randomize(48, 96);
   }
 
-  getDisplay = (roll) => {
+  resetDie = () => {
+    this.initCounter();
+    this.initInterval();
+  }
+
+  updateRollDisplay = (roll, idx) => {
     const empty = '     ';
+    const dot = this.dot;
+
     let row1, row2, row3;
+    
     if (this.sides === 6) {
-      row1 = roll > 3 ? '\u2022   \u2022' : roll > 1 ? '\u2022    ' : '     ';
-      row2 = roll == 6 ? '\u2022   \u2022' : roll % 2 == 1 ? '  \u2022  ' : '     ';
-      row3 = roll > 3 ? '\u2022   \u2022' : roll > 1 ? '    \u2022' : '     ';
+      row1 = roll > 3 ? `${dot}   ${dot}` : roll > 1 ? `${dot}    ` : '     ';
+      row2 = roll == 6 ? `${dot}   ${dot}` : roll % 2 == 1 ? `  ${dot}  ` : '     ';
+      row3 = roll > 3 ? `${dot}   ${dot}` : roll > 1 ? `    ${dot}` : '     ';
     } else {
       row1 = empty;
       row2 = `  ${roll}  `;
       row3 = empty;
     }
-    return chalk.black.bold.bgWhiteBright(`  ${empty}  \n  ${[row1 , row2, row3].join('  \n  ')}  \n  ${empty}  \n`);
+    
+    process.stdout.cursorTo(0, idx * DICE_DISPLAY_ROW_HEIGHT);
+    process.stdout.write(
+      chalk.black.bold.bgWhiteBright(
+        `  ${empty}  \n  ${[row1 , row2, row3].join('  \n  ')}  \n  ${empty}  \n`
+      )
+    );
+  }
+
+  displayFinalValue = (roll, idx) => {
+    process.stdout.cursorTo(0, (idx * DICE_DISPLAY_ROW_HEIGHT) + DICE_ROW_HEIGHT);
+    console.log(`${this.sides}-sided Die: ${roll}`);
+    console.log("");
   }
 
   randomize = (min = 1, max) =>
@@ -40,19 +61,16 @@ class Die {
   rollDie = i =>
     new Promise(resolve => {
       const getRollSnapshot = () => {
-        const rollValue = this.randomize(1, this.sides);
-        const display = this.getDisplay(rollValue);
-        process.stdout.cursorTo(0, i * 7);
-        process.stdout.write(display);
+        const roll = this.randomize(1, this.sides);
+        this.updateRollDisplay(roll, i);
 
         if (this.counter == 0) {
-          process.stdout.cursorTo(0, (i * 7) + 5);
-          console.log(`${this.sides}-sided Die: ${rollValue}`);
-          console.log("");
-          this.initCounter();
-          this.initInterval();
-          return resolve(rollValue);
+          this.displayFinalValue(roll, i)
+          this.resetDie();
+
+          return resolve(roll);
         }
+
         this.counter--;
         setTimeout(getRollSnapshot, this.interval);
       };

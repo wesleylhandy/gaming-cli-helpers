@@ -22,28 +22,28 @@ class Dice {
     this.dice.push(die);
   };
 
+  displayRollResults = rolls => {
+    process.stdout.cursorTo(0, this.dice.length * DICE_DISPLAY_ROW_HEIGHT);
+    console.log("----------");
+    console.log(
+      "Total Roll: ",
+      rolls.reduce((roll, die) => (roll += die), 0)
+    );
+    console.log("----------");
+    console.log("");
+  }
+
   rollDice = async () => {
     let promises = [];
     console.clear();
-    // const newLines = this.dice.length * 6 + 5
-    // for (let lines = 0; lines < newLines; lines ++) {
-    //   console.log("");
-    // }
-    // process.stdout.moveCursor(0, newLines * -1);
     for (let i = 0; i < this.dice.length; i++) {
       promises.push(this.dice[i].rollDie(i));
     }
     try {
       const results = await Promise.all(promises);
-      process.stdout.cursorTo(0, this.dice.length * 7);
-      console.log("----------");
-      console.log(
-        "Total Roll: ",
-        results.reduce((roll, die) => (roll += die), 0)
-      );
-      console.log("----------");
-      console.log("");
+      this.displayRollResults(results);
       return true
+
     } catch (err) {
       throw new Error(err)
     }

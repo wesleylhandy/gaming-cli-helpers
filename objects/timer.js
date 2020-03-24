@@ -11,8 +11,8 @@ class Timer {
     this.displayTime();
   }
   tick = () => {
-    if (this.counter == this.endTime) {
-      return;
+    if (this.counter === this.endTime) {
+      return process.stdout.write('\x07');
     }
 
     this.counter++;

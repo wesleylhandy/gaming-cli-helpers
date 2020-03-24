@@ -39,21 +39,25 @@ program.on("-e", helpCB);
 program.helpOption("-e, --HELP", "output usage information");
 program.parse(process.argv);
 
+const convertToSeconds = (hours, minutes, seconds) => {
+  let convertedTime = 0;
+  if (seconds !== undefined) {
+    convertedTime += seconds;
+  }
+  if (minutes !== undefined) {
+    convertedTime += minutes * 60;
+  }
+  if (hours !== undefined) {
+    convertedTime += hours * 3600;
+  }
+  return convertedTime
+}
+
 const __MAIN__ = () => {
   console.clear();
   const { seconds, minutes, hours } = program;
-
-  let endTime = 0;
-  if (seconds !== undefined) {
-    endTime += seconds;
-  }
-  if (minutes !== undefined) {
-    endTime += minutes * 60;
-  }
-  if (hours !== undefined) {
-    endTime += hours * 3600;
-  }
-  const timer = new Timer(endTime);
+  const timer = new Timer(convertToSeconds(hours, minutes, seconds));
+  
   timer.run();
 };
 
