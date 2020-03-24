@@ -1,5 +1,5 @@
 const program = require("commander");
-const Timer = require("./models/timer");
+const Timer = require("./objects/timer");
 
 program.version(process.env.npm_package_version || "0.1.0");
 

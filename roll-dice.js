@@ -1,6 +1,6 @@
 const program = require("commander");
 const inquirer = require('inquirer')
-const Dice = require("./models/dice");
+const Dice = require("./objects/dice");
 
 program.version(process.env.npm_package_version || "0.1.0");
 
