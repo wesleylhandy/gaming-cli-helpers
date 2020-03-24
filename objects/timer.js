@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 class Timer {
   constructor(endTime) {
     if (!this instanceof Timer) {
@@ -5,6 +7,7 @@ class Timer {
     }
     this.endTime = endTime || 60;
     this.counter = 0;
+    this.color = 'green';
     this.displayTime();
   }
   tick = () => {
@@ -13,6 +16,18 @@ class Timer {
     }
 
     this.counter++;
+
+    const percentComplete = ( this.counter / this.endTime ) * 100;
+    if (percentComplete > 51 && percentComplete < 76) {
+      this.color = 'yellow'
+    } else if (percentComplete > 75 && percentComplete < 91) {
+      this.color = 'orange'
+    } 
+    
+    if (percentComplete > 90 || this.endTime - this.counter < 6) {
+      this.color = 'red'
+    }
+
     this.displayTime();
 
     setTimeout(this.tick, 1000);
@@ -34,7 +49,7 @@ class Timer {
     console.clear();
     console.log("");
     console.log("---------");
-    console.log("Time: ", this.convertTime());
+    console.log("Time: ", chalk.keyword(this.color)(this.convertTime()));
     console.log("---------");
     console.log("");
   };

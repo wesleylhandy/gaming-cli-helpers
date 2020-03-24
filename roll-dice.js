@@ -1,5 +1,6 @@
 const program = require("commander");
-const Dice = require("./dice");
+const inquirer = require('inquirer')
+const Dice = require("./models/dice");
 
 program.version(process.env.npm_package_version || "0.1.0");
 
@@ -46,7 +47,26 @@ const __MAIN__ = () => {
   console.clear();
   const { numDice, sides, varyingSides } = program;
   const dice = new Dice(numDice, sides, varyingSides);
-  dice.rollDice();
+
+  const rollDice = async () => {
+    try {
+      const done = await dice.rollDice();
+      try {
+        const answers = await inquirer.prompt([{
+          type: "confirm",
+          name: "again",
+          message: "Roll again?",
+          default: true
+        }]);
+        if (answers.again === true) {
+          rollDice();
+        }
+      } catch(err) { }
+    } catch(err) { }
+  }
+
+  rollDice();
+  
 };
 
 __MAIN__();

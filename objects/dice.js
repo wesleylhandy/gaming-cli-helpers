@@ -43,8 +43,9 @@ class Dice {
       );
       console.log("----------");
       console.log("");
+      return true
     } catch (err) {
-      console.error(err);
+      throw new Error(err)
     }
   };
 }

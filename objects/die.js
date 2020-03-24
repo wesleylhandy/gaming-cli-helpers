@@ -6,10 +6,17 @@ class Die {
       return new Die(sides);
     }
     this.sides = sides;
-    this.counter = this.randomize(1, 20);
-    this.interval = this.randomize(16, 75);
     this.weight = 4.1;
-    
+    this.initCounter();
+    this.initInterval()
+  }
+
+  initCounter = () => {
+    this.counter = this.randomize(8, 12);
+  }
+
+  initInterval = () => {
+    this.interval = this.randomize(48, 96);
   }
 
   getDisplay = (roll) => {
@@ -35,6 +42,8 @@ class Die {
         if (this.counter == 0) {
           process.stdout.cursorTo(0, (i * 6) + 5);
           console.log(`${i + 1} - ${this.sides}-sided Die: ${rollValue}`);
+          this.initCounter();
+          this.initInterval();
           return resolve(rollValue);
         }
         this.counter--;
