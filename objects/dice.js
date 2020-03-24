@@ -35,7 +35,7 @@ class Dice {
     }
     try {
       const results = await Promise.all(promises);
-      process.stdout.cursorTo(0, this.dice.length * 6);
+      process.stdout.cursorTo(0, this.dice.length * 7);
       console.log("----------");
       console.log(
         "Total Roll: ",

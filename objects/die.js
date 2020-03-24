@@ -20,11 +20,18 @@ class Die {
   }
 
   getDisplay = (roll) => {
-    const yMargin = '         ';
-    const row1 = roll > 3 ? '\u2022   \u2022' : roll > 1 ? '\u2022    ' : '     ';
-    const row2 = roll == 6 ? '\u2022   \u2022' : roll % 2 == 1 ? '  \u2022  ' : '     ';
-    const row3 = roll > 3 ? '\u2022   \u2022' : roll > 1 ? '    \u2022' : '     ';
-    return chalk.black.bold.bgWhiteBright(`${yMargin}\n  ${[row1 , row2, row3].join('  \n  ')}  \n${yMargin}\n`);
+    const empty = '     ';
+    let row1, row2, row3;
+    if (this.sides === 6) {
+      row1 = roll > 3 ? '\u2022   \u2022' : roll > 1 ? '\u2022    ' : '     ';
+      row2 = roll == 6 ? '\u2022   \u2022' : roll % 2 == 1 ? '  \u2022  ' : '     ';
+      row3 = roll > 3 ? '\u2022   \u2022' : roll > 1 ? '    \u2022' : '     ';
+    } else {
+      row1 = empty;
+      row2 = `  ${roll}  `;
+      row3 = empty;
+    }
+    return chalk.black.bold.bgWhiteBright(`  ${empty}  \n  ${[row1 , row2, row3].join('  \n  ')}  \n  ${empty}  \n`);
   }
 
   randomize = (min = 1, max) =>
@@ -34,14 +41,14 @@ class Die {
     new Promise(resolve => {
       const getRollSnapshot = () => {
         const rollValue = this.randomize(1, this.sides);
-        if (this.sides === 6) {
-          const display = this.getDisplay(rollValue);
-          process.stdout.cursorTo(0, i * 6);
-          process.stdout.write(display);
-        }
+        const display = this.getDisplay(rollValue);
+        process.stdout.cursorTo(0, i * 7);
+        process.stdout.write(display);
+
         if (this.counter == 0) {
-          process.stdout.cursorTo(0, (i * 6) + 5);
-          console.log(`${i + 1} - ${this.sides}-sided Die: ${rollValue}`);
+          process.stdout.cursorTo(0, (i * 7) + 5);
+          console.log(`${this.sides}-sided Die: ${rollValue}`);
+          console.log("");
           this.initCounter();
           this.initInterval();
           return resolve(rollValue);
