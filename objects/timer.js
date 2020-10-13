@@ -37,11 +37,9 @@ class Timer {
   };
   convertTime = () => {
     const timeRemaining = this.endTime - this.counter;
+    const hours = Math.floor(timeRemaining / 3600);
+    const minutes = Math.floor((timeRemaining - (hours * 3600)) / 60);
     const seconds = timeRemaining % 60;
-    const minutes =
-      timeRemaining >= 60 ? Math.floor((timeRemaining - seconds) / 60) : 0;
-    const hours =
-      timeRemaining >= 3600 ? Math.floor((timeRemaining - seconds) / 3600) : 0;
     return `${hours}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`;
   };
 
